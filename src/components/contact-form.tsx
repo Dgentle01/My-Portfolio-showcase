@@ -51,12 +51,20 @@ export default function ContactForm() {
   });
 
   useEffect(() => {
-    if (state?.message) {
+    if (!state) return;
+
+    if (state.message) {
       toast({
         title: 'Success!',
         description: state.message,
       });
       form.reset();
+    } else if (state.error) {
+      toast({
+        title: 'Something went wrong',
+        description: state.error,
+        variant: 'destructive',
+      });
     }
   }, [state, toast, form]);
 
