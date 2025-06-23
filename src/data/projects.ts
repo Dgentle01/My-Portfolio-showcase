@@ -56,4 +56,20 @@ export const projectsData: Project[] = [
     tags: ['Git', 'Backend', 'Node.js'],
     dataAiHint: 'documentation collaboration',
   },
+  {
+    name: 'Base NFT and Coin Explorer',
+    description: 'A tool to explore NFTs and Coins on the Base blockchain.',
+    image: 'https://placehold.co/600x400.png',
+    link: 'https://basenftexplorer.vercel.app/',
+    tags: ['Blockchain', 'NFT', 'React', 'Frontend'],
+    dataAiHint: 'nft explorer',
+  },
+  {
+    name: 'Solsity - Crypto & Tech Blog',
+    description: 'A blog website for crypto and tech news and updates.',
+    image: 'https://placehold.co/600x400.png',
+    link: 'https://solsity.com',
+    tags: ['Crypto', 'Tech', 'Blog', 'Content'],
+    dataAiHint: 'crypto blog',
+  }
 ];
