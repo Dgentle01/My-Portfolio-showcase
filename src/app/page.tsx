@@ -132,7 +132,7 @@ export default function Home() {
           </p>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
-              <Link href="mailto:hello@seyi.showcase" aria-label="Email">
+              <Link href="mailto:oluseyisennuga015@gmail.com" aria-label="Email">
                 <Mail className="size-5" />
               </Link>
             </Button>
