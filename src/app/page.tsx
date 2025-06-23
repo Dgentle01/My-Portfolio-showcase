@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, CodeXml, Database, GitMerge, Mail, Palette, Sparkles } from 'lucide-react';
+import { ArrowRight, Database, GitMerge, Mail, Sparkles, FileCode2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,19 +12,26 @@ const skills = [
   {
     category: 'Frontend',
     items: [
-      { name: 'HTML', icon: <CodeXml className="size-8" /> },
-      { name: 'CSS', icon: <Palette className="size-8" /> },
-      { name: 'JavaScript', icon: <Icons.Javascript className="size-8" /> },
       { name: 'React', icon: <Icons.React className="size-8" /> },
+      { name: 'TypeScript', icon: <FileCode2 className="size-8" /> },
+      { name: 'Tailwind', icon: <Icons.Tailwind className="size-8" /> },
+      { name: 'Bootstrap', icon: <Icons.Bootstrap className="size-8" /> },
     ],
   },
   {
     category: 'Backend',
-    items: [{ name: 'Node.js', icon: <Icons.NodeJs className="size-8" /> }],
+    items: [
+      { name: 'Node.js', icon: <Icons.NodeJs className="size-8" /> },
+      { name: 'Python', icon: <Icons.Python className="size-8" /> },
+    ],
   },
   {
     category: 'Database',
-    items: [{ name: 'SQL', icon: <Database className="size-8" /> }],
+    items: [
+      { name: 'SQL', icon: <Database className="size-8" /> },
+      { name: 'MySQL', icon: <Database className="size-8" /> },
+      { name: 'Supabase', icon: <Icons.Supabase className="size-8" /> },
+    ],
   },
   {
     category: 'Version Control',
