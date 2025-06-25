@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,53 +8,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { projectsData, type Project } from '@/data/projects';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ArrowRight, Loader, Sparkles, Wand2 } from 'lucide-react';
-import { suggestProjectsAction } from '@/app/actions';
-import { useToast } from '@/hooks/use-toast';
-
-function AiPortfolioTool({ onSuggest, isPending }: { onSuggest: (keywords: string) => void; isPending: boolean }) {
-  const [keywords, setKeywords] = useState('');
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSuggest(keywords);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="flex w-full flex-col items-center gap-4 md:flex-row">
-      <div className="relative w-full">
-        <Wand2 className="absolute left-3 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
-        <Input
-          placeholder="e.g., 'React frontend projects with animations'"
-          className="pl-10"
-          value={keywords}
-          onChange={(e) => setKeywords(e.target.value)}
-          disabled={isPending}
-        />
-      </div>
-      <Button type="submit" className="w-full md:w-auto" disabled={isPending}>
-        {isPending ? <Loader className="mr-2 size-5 animate-spin" /> : <Sparkles className="mr-2 size-5" />}
-        Suggest Projects
-      </Button>
-    </form>
-  );
-}
+import { Button } from '@/components/ui/button'; import { ArrowRight } from 'lucide-react';
 
 export default function PortfolioSection() {
-  const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
   const [displayedProjects, setDisplayedProjects] = useState<Project[]>(projectsData);
   const [isFiltered, setIsFiltered] = useState(false);
 
-  const handleSuggest = (keywords: string) => {
-    if (!keywords.trim()) {
-      toast({ title: 'Please enter some keywords.', variant: 'destructive' });
-      return;
-    }
 
-    startTransition(async () => {
+
+  /* Removed AI Suggestion functionality
+    const handleSuggest = (keywords: string) => {
       const result = await suggestProjectsAction(projectsData, keywords);
       if (result.error) {
         toast({ title: result.error, variant: 'destructive' });
@@ -65,9 +28,8 @@ export default function PortfolioSection() {
         toast({ title: 'Here are your suggested projects!' });
       }
     });
-  };
-
-  const handleReset = () => {
+  };*/
+  const handleReset = () => { 
     setDisplayedProjects(projectsData);
     setIsFiltered(false);
   };
@@ -77,19 +39,11 @@ export default function PortfolioSection() {
       <div className="mx-auto flex max-w-screen-lg flex-col items-center gap-4 text-center">
         <h2 className="font-headline text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl">My Portfolio</h2>
         <p className="max-w-[700px] text-lg text-muted-foreground">
-          Explore a selection of my work. Use the AI tool below to find projects relevant to your interests!
+          Explore a selection of my work.
         </p>
       </div>
 
-      <div className="mx-auto mt-12 max-w-screen-lg">
-        <Card className="bg-card/50 p-6 backdrop-blur-sm">
-          <AiPortfolioTool onSuggest={handleSuggest} isPending={isPending} />
-        </Card>
-        {isFiltered && (
-          <div className="text-center mt-4">
-            <Button variant="link" onClick={handleReset}>Show All Projects</Button>
-          </div>
-        )}
+      <div className="mx-auto mt-12 max-w-screen-lg flex justify-center">
       </div>
 
       <motion.div layout className="mx-auto mt-12 grid max-w-screen-lg gap-8 md:grid-cols-2 lg:grid-cols-3">

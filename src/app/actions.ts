@@ -1,7 +1,6 @@
 'use server';
 
 import { z } from 'zod';
-import { suggestProjects } from '@/ai/flows/suggest-projects';
 import type { Project } from '@/data/projects';
 import { Resend } from 'resend';
 
@@ -51,28 +50,5 @@ export async function submitContactForm(prevState: any, formData: FormData) {
   } catch (error) {
     console.error('Failed to send email:', error);
     return { error: 'Sorry, there was an issue sending your message. Please try again later.' };
-  }
-}
-
-
-export async function suggestProjectsAction(projects: Project[], keywords: string) {
-  if (!keywords) {
-    return { error: 'Please enter some keywords.' };
-  }
-
-  try {
-    const projectNames = projects.map(p => p.name);
-    const projectDescriptions = projects.map(p => p.description);
-
-    const result = await suggestProjects({
-      keywords,
-      projectNames,
-      projectDescriptions,
-    });
-
-    return { suggestions: result.suggestedProjects };
-  } catch (error) {
-    console.error('Error suggesting projects:', error);
-    return { error: 'Failed to get AI suggestions. Please try again.' };
   }
 }

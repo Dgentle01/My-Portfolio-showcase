@@ -137,17 +137,17 @@ export default function Home() {
               </Link>
             </Button>
             <Button variant="ghost" size="icon" asChild>
-              <Link href="#" aria-label="Telegram">
+              <Link href="https://t.me/d_gentle1" aria-label="Telegram">
                 <Icons.Telegram className="size-5" />
               </Link>
             </Button>
             <Button variant="ghost" size="icon" asChild>
-              <Link href="#" aria-label="X (formerly Twitter)">
+              <Link href="https://x.com/D_Gentle01 " aria-label="X (formerly Twitter)">
                 <Icons.X className="size-5" />
               </Link>
             </Button>
             <Button variant="ghost" size="icon" asChild>
-              <Link href="#" aria-label="Farcaster">
+              <Link href="https://farcaster.xyz/dgentle01" aria-label="Farcaster">
                 <Icons.Farcaster className="size-5" />
               </Link>
             </Button>
