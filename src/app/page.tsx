@@ -63,7 +63,7 @@ export default function Home() {
               Building Digital Experiences
             </h1>
             <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
-              Welcome to my personal portfolio. I'm a passionate developer specializing in creating modern, responsive, and user-friendly web applications.
+              Welcome to my portfolio. I'm a passionate developer creating modern, responsive, and user-friendly web applications. My expertise extends to digital marketing and analytics, alongside building impactful onchain applications as a dedicated crypto enthusiast.
             </p>
             <div className="flex w-full items-center justify-center space-x-4 py-4 md:pb-10">
               <Button asChild className="group">
