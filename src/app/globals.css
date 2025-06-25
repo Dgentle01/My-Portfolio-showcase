@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes background-pan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -67,6 +79,9 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: linear-gradient(60deg, hsl(var(--background)), hsl(var(--secondary)), hsl(var(--background)));
+    background-size: 200% 200%;
+    animation: background-pan 10s ease infinite;
   }
 }
