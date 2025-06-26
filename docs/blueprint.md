@@ -5,7 +5,6 @@
 - Portfolio Grid: Display portfolio items (images, links, descriptions) in a visually engaging, customizable layout.
 - Contact Me: A user-friendly form to capture user name, email and message with proper input validation.
 - SEO Boost: Implementation of best practices for search engine optimization to increase visibility.
-- AI Portfolio Tool: After reading some keywords entered by the user, an LLM suggests relevant projects to display in the portfolio, if they are available. This tool uses the projects names and descriptions as inputs to its decision-making tool.
 - Social Hub: Display Seyi's Telegram, X (formerly Twitter), and Farcaster links.
 - CMS Integration: Easy interface to add new projects without any code change.
 - Skills Showcase: Showcase key skills (e.g., HTML, CSS, JavaScript, React, Node.js, SQL, Git) with minimalist icons, grouped by category (Frontend, Backend, Database, Version Control).
