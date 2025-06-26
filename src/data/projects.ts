@@ -18,10 +18,10 @@ export const projectsData: Project[] = [
     dataAiHint: 'online shopping',
   },
   {
-    name: 'Task Management App',
+    name: 'Farcaster MultiChannel Poster',
     description: 'A responsive task manager built with React and modern CSS.',
-    image: 'https://placehold.co/600x400.png', // Replace with actual image URL
-    link: 'https://your-task-manager-project-link.com', // Replace with actual project link
+    image: 'https://i.postimg.cc/J0wmRhJT/dou9kwlh.png', // Replace with actual image URL
+    link: 'https://farcaster-multichannel-poster.vercel.app/', // Replace with actual project link
     tags: ['React', 'CSS', 'Frontend'],
     dataAiHint: 'productivity tool',
   },
