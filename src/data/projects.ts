@@ -19,10 +19,10 @@ export const projectsData: Project[] = [
   },
   {
     name: 'Farcaster MultiChannel Poster',
-    description: 'A responsive task manager built with React and modern CSS.',
+    description: 'A responsive MultiChannel Poster for Farcaster users.',
     image: 'https://i.postimg.cc/J0wmRhJT/dou9kwlh.png', // Replace with actual image URL
     link: 'https://farcaster-multichannel-poster.vercel.app/', // Replace with actual project link
-    tags: ['React', 'CSS', 'Frontend'],
+    tags: ['React', 'Tailwind', 'Frontend', 'Web3'],
     dataAiHint: 'productivity tool',
   },
   {
@@ -44,11 +44,11 @@ export const projectsData: Project[] = [
   },
     {
     name: 'Portfolio Website V1',
-    description: 'My previous portfolio site, built with just HTML and CSS to showcase foundational skills.',
-    image: 'https://placehold.co/600x400.png',
+    description: 'My previous portfolio site, built with just HTML and Bootstrap to showcase foundational skills.',
+    image: 'https://i.postimg.cc/BQTD9LDV/portfolio.jpg',
     // image: 'https://i.postimg.cc/d0C5gP9B/portfolio-v1.png', // Replace with actual image URL
-    link: 'https://sennugaseyi.vercel.app/',
-    tags: ['HTML', 'CSS', 'Frontend'],
+    link: 'https://seyiis-portfolio.vercel.app/',
+    tags: ['HTML', 'Boostrap', 'Frontend','DA'],
     dataAiHint: 'personal website',
   },
   {
