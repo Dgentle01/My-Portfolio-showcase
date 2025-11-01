@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Database, GitMerge, Mail, Sparkles, FileCode2 } from 'lucide-react';
+import { ArrowRight, Database, GitMerge, Mail, Sparkles, FileCode2, PenSquare, TrendingUp, Store, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,6 +36,15 @@ const skills = [
   {
     category: 'Version Control',
     items: [{ name: 'Git', icon: <GitMerge className="size-8" /> }],
+  },
+  {
+    category: 'Digital Marketing',
+    items: [
+      { name: 'Content Writing', icon: <PenSquare className="size-8" /> },
+      { name: 'SEO', icon: <TrendingUp className="size-8" /> },
+      { name: 'Google My Business', icon: <Store className="size-8" /> },
+      { name: 'Community Manager', icon: <Users className="size-8" /> },
+    ],
   },
 ];
 
@@ -83,7 +92,7 @@ export default function Home() {
             <h2 className="font-headline text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl">My Technical Skills</h2>
             <p className="max-w-[700px] text-lg text-muted-foreground">A snapshot of the technologies and tools I use to bring ideas to life.</p>
           </div>
-          <div className="mx-auto mt-12 grid max-w-screen-lg justify-center gap-4 sm:grid-cols-2 md:grid-cols-4">
+          <div className="mx-auto mt-12 grid max-w-screen-lg justify-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {skills.map((skillGroup) => (
               <Card key={skillGroup.category} className="bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
                 <CardHeader>
