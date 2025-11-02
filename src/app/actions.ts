@@ -32,8 +32,8 @@ export async function submitContactForm(prevState: any, formData: FormData) {
 
 
   if (!resendApiKey || !sendToEmail) {
-    console.error('Resend API key or recipient email are not configured in .env.local');
-    return { error: 'The server is not configured to send emails. Please contact the site administrator.' };
+    console.error('RESEND_API_KEY or CONTACT_FORM_SEND_TO_EMAIL is not configured in .env.local');
+    return { error: 'Email server is not configured. The site owner needs to add an API key to send emails.' };
   }
   
   const resend = new Resend(resendApiKey);
