@@ -1,54 +1,43 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Database, GitMerge, Mail, Sparkles, FileCode2, PenSquare, TrendingUp, Store, Users } from 'lucide-react';
+import { 
+  ArrowRight, 
+  Database, 
+  GitMerge, 
+  Mail, 
+  Sparkles, 
+  FileCode2, 
+  PenSquare, 
+  TrendingUp, 
+  Store, 
+  Users,
+  LayoutDashboard
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Icons } from '@/components/icons';
 import PortfolioSection from '@/components/portfolio-section';
 import ContactForm from '@/components/contact-form';
-
-const skills = [
-  {
-    category: 'Frontend',
-    items: [
-      { name: 'React', icon: <Icons.React className="size-8" /> },
-      { name: 'TypeScript', icon: <FileCode2 className="size-8" /> },
-      { name: 'Tailwind', icon: <Icons.Tailwind className="size-8" /> },
-      { name: 'Bootstrap', icon: <Icons.Bootstrap className="size-8" /> },
-    ],
-  },
-  {
-    category: 'Backend',
-    items: [
-      { name: 'Node.js', icon: <Icons.NodeJs className="size-8" /> },
-      { name: 'Python', icon: <Icons.Python className="size-8" /> },
-    ],
-  },
-  {
-    category: 'Database',
-    items: [
-      { name: 'SQL', icon: <Database className="size-8" /> },
-      { name: 'MySQL', icon: <Database className="size-8" /> },
-      { name: 'Supabase', icon: <Icons.Supabase className="size-8" /> },
-    ],
-  },
-  {
-    category: 'Version Control',
-    items: [{ name: 'Git', icon: <GitMerge className="size-8" /> }],
-  },
-  {
-    category: 'Digital Marketing',
-    items: [
-      { name: 'Content Writing', icon: <PenSquare className="size-8" /> },
-      { name: 'SEO', icon: <TrendingUp className="size-8" /> },
-      { name: 'Google My Business', icon: <Store className="size-8" /> },
-      { name: 'Community Manager', icon: <Users className="size-8" /> },
-    ],
-  },
-];
+import { getSkills } from '@/app/actions';
+import { Icons } from '@/components/icons';
 
 export default function Home() {
+  const [dynamicSkills, setDynamicSkills] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadSkills() {
+      const skills = await getSkills();
+      setDynamicSkills(skills);
+    }
+    loadSkills();
+  }, []);
+
+  const categories = ['Frontend', 'Backend', 'Database', 'Version Control', 'Digital Marketing'];
+
   return (
     <div className="flex min-h-dvh flex-col text-foreground">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -61,6 +50,9 @@ export default function Home() {
             <Link href="#skills" className="hover:text-primary transition-colors">Skills</Link>
             <Link href="#portfolio" className="hover:text-primary transition-colors">Portfolio</Link>
             <Link href="#contact" className="hover:text-primary transition-colors">Contact</Link>
+            <Button variant="ghost" size="sm" asChild className="hidden lg:flex">
+              <Link href="/admin"><LayoutDashboard className="mr-2 size-4" /> Admin</Link>
+            </Button>
           </nav>
         </div>
       </header>
@@ -93,28 +85,30 @@ export default function Home() {
             <p className="max-w-[700px] text-lg text-muted-foreground">A snapshot of the technologies and tools I use to bring ideas to life.</p>
           </div>
           <div className="mx-auto mt-12 grid max-w-screen-lg justify-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-            {skills.map((skillGroup) => (
-              <Card key={skillGroup.category} className="bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
-                <CardHeader>
-                  <CardTitle className="font-headline text-xl">{skillGroup.category}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                  {skillGroup.items.map((skill) => (
-                    <div key={skill.name} className="flex items-center gap-4">
-                      <div className="text-primary">{skill.icon}</div>
-                      <span className="font-medium">{skill.name}</span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            ))}
+            {categories.map((category) => {
+              const categorySkills = dynamicSkills.filter(s => s.category === category);
+              if (categorySkills.length === 0) return null;
+              
+              return (
+                <Card key={category} className="bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+                  <CardHeader>
+                    <CardTitle className="font-headline text-xl">{category}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-col gap-4">
+                    {categorySkills.map((skill) => (
+                      <div key={skill.id} className="flex items-center gap-4">
+                        <span className="font-medium">{skill.name}</span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
         <Separator className="my-12 md:my-24" />
-
         <PortfolioSection />
-        
         <Separator className="my-12 md:my-24" />
 
         <section id="contact" className="container py-12 md:py-24">
