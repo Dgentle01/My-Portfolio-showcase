@@ -14,7 +14,6 @@ import {
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import PortfolioSection from '@/components/portfolio-section';
 import ContactForm from '@/components/contact-form';
 import { getSkills } from '@/app/actions';
@@ -39,7 +38,27 @@ const skillIconMap: Record<string, any> = {
   'Automation': Icons.AI,
   'Mobile App': Icons.Mobile,
   'Next.js': Icons.React,
+  'HTML': Icons.Code,
+  'CSS': Icons.Layers,
+  'JavaScript': Icons.Code,
 };
+
+const defaultSkills = [
+  { id: 'd1', category: 'Frontend', name: 'React' },
+  { id: 'd2', category: 'Frontend', name: 'Next.js' },
+  { id: 'd3', category: 'Frontend', name: 'TypeScript' },
+  { id: 'd4', category: 'Frontend', name: 'Tailwind' },
+  { id: 'd5', category: 'Frontend', name: 'HTML/CSS' },
+  { id: 'd6', category: 'Backend', name: 'Node.js' },
+  { id: 'd7', category: 'Backend', name: 'Python' },
+  { id: 'd8', category: 'Database', name: 'SQL' },
+  { id: 'd9', category: 'Database', name: 'Supabase' },
+  { id: 'd10', category: 'Version Control', name: 'Git' },
+  { id: 'd11', category: 'Digital Marketing', name: 'SEO' },
+  { id: 'd12', category: 'Digital Marketing', name: 'Content Writing' },
+  { id: 'd13', category: 'AI & Automation', name: 'AI Automations' },
+  { id: 'd14', category: 'Mobile Development', name: 'Mobile App' },
+];
 
 export default function Home() {
   const [dynamicSkills, setDynamicSkills] = useState<any[]>([]);
@@ -67,10 +86,12 @@ export default function Home() {
     return <Icon className="size-6 text-primary shrink-0" />;
   };
 
+  const skillsToShow = dynamicSkills.length > 0 ? dynamicSkills : defaultSkills;
+
   return (
     <div className="flex min-h-dvh flex-col text-foreground bg-[#0a0a0a]">
       <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-black/80 backdrop-blur-md">
-        <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4">
+        <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4 mx-auto">
           <Link href="/" className="flex items-center space-x-2">
             <Sparkles className="size-6 text-primary" />
             <span className="font-bold font-headline text-2xl text-primary uppercase tracking-wider">Seyi's Showcase</span>
@@ -87,22 +108,22 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <section id="hero" className="container grid max-w-screen-lg items-center gap-8 pb-12 pt-12 md:py-24 lg:py-32">
+        <section id="hero" className="container mx-auto grid max-w-screen-lg items-center gap-8 pb-12 pt-12 md:py-24 lg:py-32 px-4">
           <div className="mx-auto flex w-full flex-col items-center gap-6 text-center">
             <h1 className="font-headline text-5xl font-bold leading-none tracking-tighter md:text-7xl lg:text-8xl uppercase italic">
-              Building Digital <span className="text-primary not-italic">Experiences</span>
+              Architecting <span className="text-primary not-italic">Intelligent</span> Systems
             </h1>
             <p className="max-w-[800px] text-lg text-muted-foreground sm:text-xl leading-relaxed">
-              I'm a passionate developer specializing in modern, responsive web applications, <strong className="text-white">AI Automations</strong>, and <strong className="text-white">Mobile App Development</strong>. I bridge the gap between complex backend systems and intuitive frontend interfaces.
+              Full-stack developer engineering high-performance <strong className="text-white">AI Automations</strong>, <strong className="text-white">Mobile Solutions</strong>, and seamless web experiences. I transform complex business logic into elegant, scalable digital reality.
             </p>
             <div className="flex flex-wrap w-full items-center justify-center gap-4 py-4 md:pb-10">
               <Button asChild className="group px-8 bg-primary hover:bg-primary/90 text-white rounded-none h-12">
                 <Link href="#contact" className="uppercase font-bold tracking-widest">
-                  Start a Project <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
+                  Let's Collaborate <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
               <Button variant="outline" asChild className="px-8 border-white/20 hover:bg-white hover:text-black rounded-none h-12">
-                <Link href="#portfolio" className="uppercase font-bold tracking-widest">View Portfolio</Link>
+                <Link href="#portfolio" className="uppercase font-bold tracking-widest">Browse Work</Link>
               </Button>
               <div className="flex items-center gap-4 ml-4">
                 <Link href="https://github.com/oluseyisennuga" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
@@ -122,13 +143,13 @@ export default function Home() {
         <section id="skills" className="bg-[#111] py-20 md:py-32 border-y border-white/5">
           <div className="container max-w-screen-xl mx-auto px-4">
             <div className="flex flex-col items-center gap-4 text-center mb-16">
-              <h2 className="font-headline text-4xl font-bold uppercase tracking-widest sm:text-5xl md:text-6xl">My Technical <span className="text-primary">Skills</span></h2>
-              <p className="max-w-[700px] text-lg text-muted-foreground">A snapshot of the technologies and tools I use to bring ideas to life.</p>
+              <h2 className="font-headline text-4xl font-bold uppercase tracking-widest sm:text-5xl md:text-6xl">Tech <span className="text-primary">Stack</span></h2>
+              <p className="max-w-[700px] text-lg text-muted-foreground">The specialized tools and frameworks I use to build production-grade software.</p>
             </div>
             
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 justify-center">
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center">
               {categories.map((category) => {
-                const categorySkills = dynamicSkills.filter(s => s.category === category);
+                const categorySkills = skillsToShow.filter(s => s.category === category);
                 if (categorySkills.length === 0) return null;
 
                 return (
@@ -153,15 +174,15 @@ export default function Home() {
 
         <PortfolioSection />
 
-        <section id="contact" className="container py-20 md:py-32">
+        <section id="contact" className="container mx-auto py-20 md:py-32 px-4">
           <div className="mx-auto flex max-w-screen-lg flex-col items-center gap-4 text-center mb-16">
-            <h2 className="font-headline text-4xl font-bold uppercase tracking-widest sm:text-5xl md:text-6xl">Get In <span className="text-primary">Touch</span></h2>
-            <p className="max-w-[700px] text-lg text-muted-foreground">Have a project in mind? Let's build something extraordinary together.</p>
+            <h2 className="font-headline text-4xl font-bold uppercase tracking-widest sm:text-5xl md:text-6xl">Direct <span className="text-primary">Contact</span></h2>
+            <p className="max-w-[700px] text-lg text-muted-foreground">Ready to start your next big project? Reach out through any of these channels.</p>
           </div>
           
           <div className="grid gap-8 max-w-screen-xl mx-auto md:grid-cols-12 items-start">
             <div className="md:col-span-4 space-y-6">
-              <h3 className="font-headline text-2xl uppercase tracking-wider mb-6">Contact Info</h3>
+              <h3 className="font-headline text-2xl uppercase tracking-wider mb-6">Connect Directly</h3>
               <div className="space-y-4">
                 <Card className="bg-[#1a1a1a] border-white/5 p-6 rounded-none hover:border-primary/50 transition-colors">
                   <div className="flex items-center gap-4">
@@ -198,7 +219,7 @@ export default function Home() {
 
             <Card className="md:col-span-8 bg-[#1a1a1a] border-white/5 rounded-none p-2">
               <CardHeader className="pb-2">
-                <CardTitle className="font-headline text-2xl uppercase tracking-wider flex items-center gap-2">Send a <span className="text-primary">Message</span></CardTitle>
+                <CardTitle className="font-headline text-2xl uppercase tracking-wider flex items-center gap-2">Project <span className="text-primary">Inquiry</span></CardTitle>
               </CardHeader>
               <CardContent>
                 <ContactForm />
