@@ -38,7 +38,7 @@ export default function Home() {
         <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Sparkles className="size-6 text-primary" />
-            <span className="font-bold font-headline text-2xl">Seyi's Showcase</span>
+            <span className="font-bold font-headline text-2xl text-primary">Seyi's Showcase</span>
           </Link>
           <nav className="hidden items-center space-x-8 text-lg font-medium md:flex">
             <Link href="#skills" className="hover:text-primary transition-colors">Skills</Link>
@@ -61,23 +61,28 @@ export default function Home() {
               Welcome to my portfolio. I'm a passionate developer creating modern, responsive, and user-friendly web applications. My expertise extends to digital marketing and analytics, alongside building impactful onchain applications as a dedicated crypto enthusiast.
             </p>
             <div className="flex flex-wrap w-full items-center justify-center gap-4 py-4 md:pb-10">
-              <Button interstate="contact-btn" asChild className="group">
+              <Button asChild className="group px-8">
                 <Link href="#contact">
                   Contact Me <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <Button variant="outline" asChild>
+              <Button variant="outline" asChild className="px-8">
                 <Link href="#portfolio">View My Work</Link>
               </Button>
               <div className="flex items-center gap-2 ml-2">
                 <Button variant="ghost" size="icon" asChild title="GitHub Profile">
                   <Link href="https://github.com/oluseyisennuga" target="_blank" rel="noopener noreferrer">
-                    <Github className="size-5" />
+                    <Github className="size-6" />
                   </Link>
                 </Button>
                 <Button variant="ghost" size="icon" asChild title="Telegram direct">
                   <Link href="https://t.me/d_gentle1" target="_blank" rel="noopener noreferrer">
-                    <Send className="size-5" />
+                    <Send className="size-6" />
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="icon" asChild title="Email">
+                  <Link href="mailto:oluseyisennuga015@gmail.com">
+                    <Mail className="size-6" />
                   </Link>
                 </Button>
               </div>
@@ -90,22 +95,28 @@ export default function Home() {
             <h2 className="font-headline text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl">My Technical Skills</h2>
             <p className="max-w-[700px] text-lg text-muted-foreground">A snapshot of the technologies and tools I use to bring ideas to life.</p>
           </div>
-          <div className="mx-auto mt-12 grid max-w-screen-lg justify-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="mx-auto mt-12 grid max-w-screen-lg justify-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {categories.map((category) => {
               const categorySkills = dynamicSkills.filter(s => s.category === category);
-              if (categorySkills.length === 0) return null;
+              if (categorySkills.length === 0 && dynamicSkills.length > 0) return null;
               
+              // Fallback icons or list for default view
               return (
-                <Card key={category} className="bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+                <Card key={category} className="bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 border-primary/10">
                   <CardHeader>
-                    <CardTitle className="font-headline text-xl">{category}</CardTitle>
+                    <CardTitle className="font-headline text-xl text-primary">{category}</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex flex-col gap-4">
-                    {categorySkills.map((skill) => (
-                      <div key={skill.id} className="flex items-center gap-4">
-                        <span className="font-medium">{skill.name}</span>
-                      </div>
-                    ))}
+                  <CardContent className="flex flex-col gap-2">
+                    {categorySkills.length > 0 ? (
+                      categorySkills.map((skill) => (
+                        <div key={skill.id} className="flex items-center gap-2">
+                          <div className="size-1.5 rounded-full bg-primary" />
+                          <span className="font-medium text-sm">{skill.name}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-xs text-muted-foreground italic">Add via Admin</span>
+                    )}
                   </CardContent>
                 </Card>
               );
@@ -113,36 +124,36 @@ export default function Home() {
           </div>
         </section>
 
-        <Separator className="my-12 md:my-24" />
+        <Separator className="my-12 md:my-24 opacity-20" />
         <PortfolioSection />
-        <Separator className="my-12 md:my-24" />
+        <Separator className="my-12 md:my-24 opacity-20" />
 
         <section id="contact" className="container py-12 md:py-24">
            <div className="mx-auto flex max-w-screen-lg flex-col items-center gap-4 text-center">
             <h2 className="font-headline text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl">Get In Touch</h2>
             <p className="max-w-[700px] text-lg text-muted-foreground">Have a project in mind or just want to say hello? I'd love to hear from you.</p>
           </div>
-          <div className="grid gap-8 max-w-screen-md mx-auto mt-12 md:grid-cols-3 text-center">
-            <Card className="bg-card/40 backdrop-blur-sm p-4 flex flex-col items-center justify-center gap-2">
-              <Mail className="size-6 text-primary" />
+          <div className="grid gap-6 max-w-screen-md mx-auto mt-12 md:grid-cols-3 text-center">
+            <Card className="bg-card/40 backdrop-blur-sm p-6 flex flex-col items-center justify-center gap-3 border-primary/10 hover:border-primary/30 transition-colors">
+              <Mail className="size-8 text-primary" />
               <span className="font-bold text-sm">Email Directly</span>
               <Link href="mailto:oluseyisennuga015@gmail.com" className="text-xs text-primary underline truncate max-w-full">oluseyisennuga015@gmail.com</Link>
             </Card>
-            <Card className="bg-card/40 backdrop-blur-sm p-4 flex flex-col items-center justify-center gap-2">
-              <Send className="size-6 text-primary" />
+            <Card className="bg-card/40 backdrop-blur-sm p-6 flex flex-col items-center justify-center gap-3 border-primary/10 hover:border-primary/30 transition-colors">
+              <Send className="size-8 text-primary" />
               <span className="font-bold text-sm">Telegram Chat</span>
               <Link href="https://t.me/d_gentle1" target="_blank" className="text-xs text-primary underline">@d_gentle1</Link>
             </Card>
-            <Card className="bg-card/40 backdrop-blur-sm p-4 flex flex-col items-center justify-center gap-2">
-              <Github className="size-6 text-primary" />
+            <Card className="bg-card/40 backdrop-blur-sm p-6 flex flex-col items-center justify-center gap-3 border-primary/10 hover:border-primary/30 transition-colors">
+              <Github className="size-8 text-primary" />
               <span className="font-bold text-sm">GitHub</span>
               <Link href="https://github.com/oluseyisennuga" target="_blank" className="text-xs text-primary underline">oluseyisennuga</Link>
             </Card>
           </div>
-          <Card className="mx-auto mt-8 max-w-screen-md bg-card/50 backdrop-blur-sm">
+          <Card className="mx-auto mt-8 max-w-screen-md bg-card/50 backdrop-blur-sm border-primary/20">
             <CardHeader>
-              <CardTitle className="font-headline text-xl flex items-center gap-2"><Mail className="size-5" /> Send me a message</CardTitle>
-              <CardDescription>I'll get back to you as soon as possible.</CardDescription>
+              <CardTitle className="font-headline text-xl flex items-center gap-2"><Mail className="size-5 text-primary" /> Send me a message</CardTitle>
+              <CardDescription>I'll get back to you as soon as possible via your chosen method.</CardDescription>
             </CardHeader>
             <CardContent>
               <ContactForm />
@@ -151,37 +162,33 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="w-full border-t border-border/40 bg-background/95 py-6">
-        <div className="container flex max-w-screen-2xl flex-col items-center justify-between gap-4 md:flex-row">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            Built by Seyi. &copy; {new Date().getFullYear()}. All Rights Reserved.
-          </p>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild title="Email">
-              <Link href="mailto:oluseyisennuga015@gmail.com">
-                <Mail className="size-5" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="Telegram">
-              <Link href="https://t.me/d_gentle1" target="_blank">
-                <Icons.Telegram className="size-5" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="GitHub">
-              <Link href="https://github.com/oluseyisennuga" target="_blank">
-                <Github className="size-5" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="X (Twitter)">
-              <Link href="https://x.com/D_Gentle01" target="_blank">
-                <Icons.X className="size-5" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="Farcaster">
-              <Link href="https://farcaster.xyz/dgentle01" target="_blank">
-                <Icons.Farcaster className="size-5" />
-              </Link>
-            </Button>
+      <footer className="w-full border-t border-border/40 bg-background/95 py-12">
+        <div className="container flex max-w-screen-2xl flex-col items-center justify-between gap-6 md:flex-row">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2">
+              <Sparkles className="size-5 text-primary" />
+              <span className="font-bold font-headline text-xl">Seyi</span>
+            </div>
+            <p className="text-center text-sm text-muted-foreground md:text-left">
+              &copy; {new Date().getFullYear()}. All Rights Reserved.
+            </p>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link href="mailto:oluseyisennuga015@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+              <Mail className="size-5" />
+            </Link>
+            <Link href="https://t.me/d_gentle1" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+              <Icons.Telegram className="size-5" />
+            </Link>
+            <Link href="https://github.com/oluseyisennuga" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+              <Github className="size-5" />
+            </Link>
+            <Link href="https://x.com/D_Gentle01" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+              <Icons.X className="size-5" />
+            </Link>
+            <Link href="https://farcaster.xyz/dgentle01" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+              <Icons.Farcaster className="size-5" />
+            </Link>
           </div>
         </div>
       </footer>
