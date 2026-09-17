@@ -13,7 +13,9 @@ import {
   Clock,
   User,
   LogOut,
-  Loader2
+  Loader2,
+  Edit2,
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -34,7 +36,7 @@ import {
 } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 
 export default function AdminDashboard() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -44,7 +46,16 @@ export default function AdminDashboard() {
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const [newProject, setNewProject] = useState({ name: '', description: '', image: '', link: '', tags: '', dataAiHint: '' });
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
+  const [projectForm, setProjectForm] = useState({ 
+    name: '', 
+    description: '', 
+    image: '', 
+    link: '', 
+    tags: '', 
+    dataAiHint: '' 
+  });
+  
   const [newSkill, setNewSkill] = useState({ category: 'Frontend', name: '' });
 
   useEffect(() => {
@@ -53,15 +64,20 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     setLoading(true);
-    const [msgs, projs, skls] = await Promise.all([
-      getMessages(),
-      getProjects(),
-      getSkills()
-    ]);
-    setMessages(msgs);
-    setProjects(projs);
-    setSkills(skls);
-    setLoading(false);
+    try {
+      const [msgs, projs, skls] = await Promise.all([
+        getMessages(),
+        getProjects(),
+        getSkills()
+      ]);
+      setMessages(msgs);
+      setProjects(projs);
+      setSkills(skls);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteMessage = async (id: string) => {
@@ -72,20 +88,48 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddProject = async (e: React.FormEvent) => {
+  const handleSaveProject = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    const tagsArray = newProject.tags.split(',').map(t => t.trim()).filter(t => t !== '');
-    const res = await saveProject({ ...newProject, tags: tagsArray });
+    const tagsArray = typeof projectForm.tags === 'string' 
+      ? projectForm.tags.split(',').map(t => t.trim()).filter(t => t !== '')
+      : projectForm.tags;
+
+    const projectData = { 
+      ...projectForm, 
+      tags: tagsArray,
+      id: editingProjectId || undefined 
+    };
+
+    const res = await saveProject(projectData);
     setSubmitting(false);
     if (res.success) {
-      toast({ title: 'Project added successfully' });
-      setNewProject({ name: '', description: '', image: '', link: '', tags: '', dataAiHint: '' });
+      toast({ title: editingProjectId ? 'Project updated' : 'Project added' });
+      resetProjectForm();
       fetchData();
     }
   };
 
+  const resetProjectForm = () => {
+    setEditingProjectId(null);
+    setProjectForm({ name: '', description: '', image: '', link: '', tags: '', dataAiHint: '' });
+  };
+
+  const startEditProject = (proj: any) => {
+    setEditingProjectId(proj.id);
+    setProjectForm({
+      name: proj.name,
+      description: proj.description,
+      image: proj.image || '',
+      link: proj.link || '',
+      tags: Array.isArray(proj.tags) ? proj.tags.join(', ') : '',
+      dataAiHint: proj.dataAiHint || ''
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleDeleteProject = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this project?")) return;
     const res = await deleteProject(id);
     if (res.success) {
       setProjects(projects.filter(p => p.id !== id));
@@ -188,35 +232,42 @@ export default function AdminDashboard() {
 
           <TabsContent value="projects" className="space-y-6">
             <Card className="border-primary/20">
-              <CardHeader>
-                <CardTitle>Add New Project</CardTitle>
-                <CardDescription>Populate your portfolio with new work.</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>{editingProjectId ? 'Edit Project' : 'Add New Project'}</CardTitle>
+                  <CardDescription>Manage your portfolio items.</CardDescription>
+                </div>
+                {editingProjectId && (
+                  <Button variant="ghost" size="sm" onClick={resetProjectForm}>
+                    <X className="mr-2 size-4" /> Cancel Edit
+                  </Button>
+                )}
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleAddProject} className="grid gap-4 md:grid-cols-2">
+                <form onSubmit={handleSaveProject} className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label>Project Name</Label>
-                    <Input value={newProject.name} onChange={e => setNewProject({...newProject, name: e.target.value})} required />
+                    <Input value={projectForm.name} onChange={e => setProjectForm({...projectForm, name: e.target.value})} required />
                   </div>
                   <div className="space-y-2">
                     <Label>Project Link</Label>
-                    <Input value={newProject.link} onChange={e => setNewProject({...newProject, link: e.target.value})} required />
+                    <Input value={projectForm.link} onChange={e => setProjectForm({...projectForm, link: e.target.value})} required />
                   </div>
                   <div className="space-y-2">
-                    <Label>Image URL (or leave blank for placeholder)</Label>
-                    <Input value={newProject.image} onChange={e => setNewProject({...newProject, image: e.target.value})} placeholder="https://..." />
+                    <Label>Image URL</Label>
+                    <Input value={projectForm.image} onChange={e => setProjectForm({...projectForm, image: e.target.value})} placeholder="https://..." />
                   </div>
                   <div className="space-y-2">
                     <Label>Tags (comma separated)</Label>
-                    <Input value={newProject.tags} onChange={e => setNewProject({...newProject, tags: e.target.value})} placeholder="React, Next.js, Web3" />
+                    <Input value={projectForm.tags} onChange={e => setProjectForm({...projectForm, tags: e.target.value})} placeholder="React, Next.js, Web3" />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label>Description</Label>
-                    <Textarea value={newProject.description} onChange={e => setNewProject({...newProject, description: e.target.value})} required />
+                    <Textarea value={projectForm.description} onChange={e => setProjectForm({...projectForm, description: e.target.value})} required />
                   </div>
                   <Button type="submit" disabled={submitting} className="md:col-span-2">
-                    {submitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Plus className="mr-2 size-4" />}
-                    Add Project
+                    {submitting ? <Loader2 className="mr-2 size-4 animate-spin" /> : (editingProjectId ? <Edit2 className="mr-2 size-4" /> : <Plus className="mr-2 size-4" />)}
+                    {editingProjectId ? 'Update Project' : 'Add Project'}
                   </Button>
                 </form>
               </CardContent>
@@ -224,13 +275,16 @@ export default function AdminDashboard() {
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((proj) => (
-                <Card key={proj.id || proj.name} className="group overflow-hidden">
+                <Card key={proj.id || proj.name} className="group overflow-hidden bg-card/50">
                   <CardHeader>
                     <CardTitle className="text-lg truncate">{proj.name}</CardTitle>
                     <CardDescription className="line-clamp-2 min-h-[2.5rem]">{proj.description}</CardDescription>
                   </CardHeader>
                   <CardContent className="flex items-center justify-between pt-2 border-t bg-muted/20">
                     <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => startEditProject(proj)}>
+                        <Edit2 className="size-4" />
+                      </Button>
                       <Button variant="outline" size="sm" asChild>
                         <a href={proj.link} target="_blank" rel="noopener noreferrer"><ExternalLink className="size-4" /></a>
                       </Button>
@@ -248,6 +302,7 @@ export default function AdminDashboard() {
             <Card className="border-primary/20">
               <CardHeader>
                 <CardTitle>Manage Skills</CardTitle>
+                <CardDescription>Add new technical or marketing skills.</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleAddSkill} className="flex flex-col md:flex-row gap-4">
