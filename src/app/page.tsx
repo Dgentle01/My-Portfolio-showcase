@@ -100,7 +100,6 @@ export default function Home() {
               const categorySkills = dynamicSkills.filter(s => s.category === category);
               if (categorySkills.length === 0 && dynamicSkills.length > 0) return null;
               
-              // Fallback icons or list for default view
               return (
                 <Card key={category} className="bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 border-primary/10">
                   <CardHeader>
@@ -129,11 +128,12 @@ export default function Home() {
         <Separator className="my-12 md:my-24 opacity-20" />
 
         <section id="contact" className="container py-12 md:py-24">
-           <div className="mx-auto flex max-w-screen-lg flex-col items-center gap-4 text-center">
+          <div className="mx-auto flex max-w-screen-lg flex-col items-center gap-4 text-center">
             <h2 className="font-headline text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl">Get In Touch</h2>
             <p className="max-w-[700px] text-lg text-muted-foreground">Have a project in mind or just want to say hello? I'd love to hear from you.</p>
           </div>
-          <div className="grid gap-6 max-w-screen-md mx-auto mt-12 md:grid-cols-3 text-center">
+          
+          <div className="grid gap-6 max-w-screen-md mx-auto mt-12 md:grid-cols-4 text-center">
             <Card className="bg-card/40 backdrop-blur-sm p-6 flex flex-col items-center justify-center gap-3 border-primary/10 hover:border-primary/30 transition-colors">
               <Mail className="size-8 text-primary" />
               <span className="font-bold text-sm">Email Directly</span>
@@ -149,11 +149,17 @@ export default function Home() {
               <span className="font-bold text-sm">GitHub</span>
               <Link href="https://github.com/oluseyisennuga" target="_blank" className="text-xs text-primary underline">oluseyisennuga</Link>
             </Card>
+            <Card className="bg-card/40 backdrop-blur-sm p-6 flex flex-col items-center justify-center gap-3 border-primary/10 hover:border-primary/30 transition-colors">
+              <Icons.LinkedIn className="size-8 text-primary" />
+              <span className="font-bold text-sm">LinkedIn</span>
+              <Link href="https://linkedin.com/in/oluseyisennuga" target="_blank" className="text-xs text-primary underline">oluseyisennuga</Link>
+            </Card>
           </div>
-          <Card className="mx-auto mt-8 max-w-screen-md bg-card/50 backdrop-blur-sm border-primary/20">
+
+          <Card className="mx-auto mt-12 max-w-screen-md bg-card/50 backdrop-blur-sm border-primary/20">
             <CardHeader>
               <CardTitle className="font-headline text-xl flex items-center gap-2"><Mail className="size-5 text-primary" /> Send me a message</CardTitle>
-              <CardDescription>I'll get back to you as soon as possible via your chosen method.</CardDescription>
+              <CardDescription>You can also reach out by filling this form, and I'll get back to you as soon as possible.</CardDescription>
             </CardHeader>
             <CardContent>
               <ContactForm />
@@ -174,19 +180,22 @@ export default function Home() {
             </p>
           </div>
           <div className="flex items-center gap-6">
-            <Link href="mailto:oluseyisennuga015@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href="mailto:oluseyisennuga015@gmail.com" className="text-muted-foreground hover:text-primary transition-colors" title="Email">
               <Mail className="size-5" />
             </Link>
-            <Link href="https://t.me/d_gentle1" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href="https://t.me/d_gentle1" target="_blank" className="text-muted-foreground hover:text-primary transition-colors" title="Telegram">
               <Icons.Telegram className="size-5" />
             </Link>
-            <Link href="https://github.com/oluseyisennuga" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href="https://github.com/oluseyisennuga" target="_blank" className="text-muted-foreground hover:text-primary transition-colors" title="GitHub">
               <Github className="size-5" />
             </Link>
-            <Link href="https://x.com/D_Gentle01" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href="https://linkedin.com/in/oluseyisennuga" target="_blank" className="text-muted-foreground hover:text-primary transition-colors" title="LinkedIn">
+              <Icons.LinkedIn className="size-5" />
+            </Link>
+            <Link href="https://x.com/D_Gentle01" target="_blank" className="text-muted-foreground hover:text-primary transition-colors" title="X (Twitter)">
               <Icons.X className="size-5" />
             </Link>
-            <Link href="https://farcaster.xyz/dgentle01" target="_blank" className="text-muted-foreground hover:text-primary transition-colors">
+            <Link href="https://farcaster.xyz/dgentle01" target="_blank" className="text-muted-foreground hover:text-primary transition-colors" title="Farcaster">
               <Icons.Farcaster className="size-5" />
             </Link>
           </div>
