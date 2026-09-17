@@ -30,7 +30,15 @@ export default function Home() {
     loadSkills();
   }, []);
 
-  const categories = ['Frontend', 'Backend', 'Database', 'Version Control', 'Digital Marketing'];
+  const categories = [
+    'Frontend', 
+    'Backend', 
+    'Database', 
+    'Version Control', 
+    'Digital Marketing',
+    'AI & Automation',
+    'Mobile Development'
+  ];
 
   return (
     <div className="flex min-h-dvh flex-col text-foreground">
@@ -58,7 +66,7 @@ export default function Home() {
               Building Digital Experiences
             </h1>
             <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
-              Welcome to my portfolio. I'm a passionate developer creating modern, responsive, and user-friendly web applications. My expertise extends to digital marketing and analytics, alongside building impactful onchain applications as a dedicated crypto enthusiast.
+              Welcome to my portfolio. I'm a passionate developer creating modern, responsive, and user-friendly web applications. My expertise extends to <strong>AI Automations</strong>, <strong>Mobile App Development</strong>, digital marketing, and analytics, alongside building impactful onchain applications as a dedicated crypto enthusiast.
             </p>
             <div className="flex flex-wrap w-full items-center justify-center gap-4 py-4 md:pb-10">
               <Button asChild className="group px-8">
@@ -95,10 +103,9 @@ export default function Home() {
             <h2 className="font-headline text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl">My Technical Skills</h2>
             <p className="max-w-[700px] text-lg text-muted-foreground">A snapshot of the technologies and tools I use to bring ideas to life.</p>
           </div>
-          <div className="mx-auto mt-12 grid max-w-screen-lg justify-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="mx-auto mt-12 grid max-w-screen-lg justify-center gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {categories.map((category) => {
               const categorySkills = dynamicSkills.filter(s => s.category === category);
-              if (categorySkills.length === 0 && dynamicSkills.length > 0) return null;
               
               return (
                 <Card key={category} className="bg-card/50 backdrop-blur-sm transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 border-primary/10">
@@ -114,7 +121,7 @@ export default function Home() {
                         </div>
                       ))
                     ) : (
-                      <span className="text-xs text-muted-foreground italic">Add via Admin</span>
+                      <span className="text-xs text-muted-foreground italic">No skills added yet</span>
                     )}
                   </CardContent>
                 </Card>

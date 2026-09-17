@@ -36,7 +36,7 @@ import {
 } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function AdminDashboard() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -57,6 +57,16 @@ export default function AdminDashboard() {
   });
   
   const [newSkill, setNewSkill] = useState({ category: 'Frontend', name: '' });
+
+  const categories = [
+    'Frontend', 
+    'Backend', 
+    'Database', 
+    'Version Control', 
+    'Digital Marketing',
+    'AI & Automation',
+    'Mobile Development'
+  ];
 
   useEffect(() => {
     fetchData();
@@ -313,11 +323,9 @@ export default function AdminDashboard() {
                         <SelectValue placeholder="Select Category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Frontend">Frontend</SelectItem>
-                        <SelectItem value="Backend">Backend</SelectItem>
-                        <SelectItem value="Database">Database</SelectItem>
-                        <SelectItem value="Version Control">Version Control</SelectItem>
-                        <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
+                        {categories.map(cat => (
+                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -335,8 +343,8 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {['Frontend', 'Backend', 'Database', 'Version Control', 'Digital Marketing'].map(cat => (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {categories.map(cat => (
                 <Card key={cat} className="flex flex-col">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-lg border-l-4 border-primary pl-3">{cat}</CardTitle>
