@@ -1,20 +1,14 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   ArrowRight, 
-  Database, 
-  GitMerge, 
   Mail, 
   Sparkles, 
-  FileCode2, 
-  PenSquare, 
-  TrendingUp, 
-  Store, 
-  Users,
-  LayoutDashboard
+  LayoutDashboard,
+  Github,
+  Send
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -66,8 +60,8 @@ export default function Home() {
             <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
               Welcome to my portfolio. I'm a passionate developer creating modern, responsive, and user-friendly web applications. My expertise extends to digital marketing and analytics, alongside building impactful onchain applications as a dedicated crypto enthusiast.
             </p>
-            <div className="flex w-full items-center justify-center space-x-4 py-4 md:pb-10">
-              <Button asChild className="group">
+            <div className="flex flex-wrap w-full items-center justify-center gap-4 py-4 md:pb-10">
+              <Button interstate="contact-btn" asChild className="group">
                 <Link href="#contact">
                   Contact Me <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
                 </Link>
@@ -75,6 +69,18 @@ export default function Home() {
               <Button variant="outline" asChild>
                 <Link href="#portfolio">View My Work</Link>
               </Button>
+              <div className="flex items-center gap-2 ml-2">
+                <Button variant="ghost" size="icon" asChild title="GitHub Profile">
+                  <Link href="https://github.com/oluseyisennuga" target="_blank" rel="noopener noreferrer">
+                    <Github className="size-5" />
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="icon" asChild title="Telegram direct">
+                  <Link href="https://t.me/d_gentle1" target="_blank" rel="noopener noreferrer">
+                    <Send className="size-5" />
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -116,7 +122,24 @@ export default function Home() {
             <h2 className="font-headline text-3xl font-bold leading-tight tracking-tighter sm:text-4xl md:text-5xl">Get In Touch</h2>
             <p className="max-w-[700px] text-lg text-muted-foreground">Have a project in mind or just want to say hello? I'd love to hear from you.</p>
           </div>
-          <Card className="mx-auto mt-12 max-w-screen-md bg-card/50 backdrop-blur-sm">
+          <div className="grid gap-8 max-w-screen-md mx-auto mt-12 md:grid-cols-3 text-center">
+            <Card className="bg-card/40 backdrop-blur-sm p-4 flex flex-col items-center justify-center gap-2">
+              <Mail className="size-6 text-primary" />
+              <span className="font-bold text-sm">Email Directly</span>
+              <Link href="mailto:oluseyisennuga015@gmail.com" className="text-xs text-primary underline truncate max-w-full">oluseyisennuga015@gmail.com</Link>
+            </Card>
+            <Card className="bg-card/40 backdrop-blur-sm p-4 flex flex-col items-center justify-center gap-2">
+              <Send className="size-6 text-primary" />
+              <span className="font-bold text-sm">Telegram Chat</span>
+              <Link href="https://t.me/d_gentle1" target="_blank" className="text-xs text-primary underline">@d_gentle1</Link>
+            </Card>
+            <Card className="bg-card/40 backdrop-blur-sm p-4 flex flex-col items-center justify-center gap-2">
+              <Github className="size-6 text-primary" />
+              <span className="font-bold text-sm">GitHub</span>
+              <Link href="https://github.com/oluseyisennuga" target="_blank" className="text-xs text-primary underline">oluseyisennuga</Link>
+            </Card>
+          </div>
+          <Card className="mx-auto mt-8 max-w-screen-md bg-card/50 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="font-headline text-xl flex items-center gap-2"><Mail className="size-5" /> Send me a message</CardTitle>
               <CardDescription>I'll get back to you as soon as possible.</CardDescription>
@@ -134,23 +157,28 @@ export default function Home() {
             Built by Seyi. &copy; {new Date().getFullYear()}. All Rights Reserved.
           </p>
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="mailto:oluseyisennuga015@gmail.com" aria-label="Email">
+            <Button variant="ghost" size="icon" asChild title="Email">
+              <Link href="mailto:oluseyisennuga015@gmail.com">
                 <Mail className="size-5" />
               </Link>
             </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="https://t.me/d_gentle1" aria-label="Telegram">
+            <Button variant="ghost" size="icon" asChild title="Telegram">
+              <Link href="https://t.me/d_gentle1" target="_blank">
                 <Icons.Telegram className="size-5" />
               </Link>
             </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="https://x.com/D_Gentle01 " aria-label="X (formerly Twitter)">
+            <Button variant="ghost" size="icon" asChild title="GitHub">
+              <Link href="https://github.com/oluseyisennuga" target="_blank">
+                <Github className="size-5" />
+              </Link>
+            </Button>
+            <Button variant="ghost" size="icon" asChild title="X (Twitter)">
+              <Link href="https://x.com/D_Gentle01" target="_blank">
                 <Icons.X className="size-5" />
               </Link>
             </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="https://farcaster.xyz/dgentle01" aria-label="Farcaster">
+            <Button variant="ghost" size="icon" asChild title="Farcaster">
+              <Link href="https://farcaster.xyz/dgentle01" target="_blank">
                 <Icons.Farcaster className="size-5" />
               </Link>
             </Button>

@@ -36,9 +36,26 @@ export async function submitContactForm(prevState: any, formData: FormData) {
       createdAt: serverTimestamp(),
     });
 
-    // 2. Send Email via Resend
+    // 2. Optional: Send via Telegram Bot (Free, Instant, No domain required!)
+    const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
+    const telegramChatId = process.env.TELEGRAM_CHAT_ID;
+
+    if (telegramBotToken && telegramChatId) {
+      const text = `📬 *New Portfolio Message*\n\n*Name:* ${name}\n*Email:* ${email}\n\n*Message:*\n${message}`;
+      await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text: text,
+          parse_mode: 'Markdown',
+        }),
+      });
+    }
+
+    // 3. Optional: Send Email via Resend
     const resendApiKey = process.env.RESEND_API_KEY;
-    const sendToEmail = 'oluseyisennuga015@gmail.com';
+    const sendToEmail = process.env.CONTACT_FORM_SEND_TO_EMAIL || 'oluseyisennuga015@gmail.com';
     const sendFromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
     if (resendApiKey) {
@@ -117,7 +134,8 @@ export async function deleteProject(id: string) {
 
 export async function getSkills() {
   try {
-    const snapshot = await getDocs(collection(db, 'skills'));
+    const q = query(collection(db, 'skills'), orderBy('createdAt', 'asc'));
+    const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     return [];
