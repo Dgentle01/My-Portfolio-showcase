@@ -71,13 +71,17 @@ export async function submitContactForm(prevState: any, formData: FormData) {
 
     if (resendApiKey) {
       const resend = new Resend(resendApiKey);
-      await resend.emails.send({
-        from: `Portfolio <${sendFromEmail}>`,
-        to: sendToEmail,
-        subject: `New message from ${name}`,
-        reply_to: email,
-        html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message}</p>`,
-      });
+      try {
+        await resend.emails.send({
+          from: `Portfolio <${sendFromEmail}>`,
+          to: sendToEmail,
+          subject: `New message from ${name}`,
+          reply_to: email,
+          html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message}</p>`,
+        });
+      } catch (resendError) {
+        console.error('Resend failed:', resendError);
+      }
     }
 
     return { message: 'Thank you! Your message has been sent and recorded.' };
@@ -95,7 +99,7 @@ export async function getMessages() {
       const data = doc.data();
       let createdAt = new Date().toISOString();
       
-      if (data.createdAt instanceof Timestamp) {
+      if (data.createdAt && data.createdAt instanceof Timestamp) {
         createdAt = data.createdAt.toDate().toISOString();
       } else if (data.createdAt) {
         createdAt = new Date(data.createdAt).toISOString();

@@ -118,10 +118,14 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteMessage = async (id: string) => {
-    const res = await deleteMessage(id);
-    if (res.success) {
-      setMessages(messages.filter(m => m.id !== id));
-      toast({ title: 'Message removed' });
+    try {
+      const res = await deleteMessage(id);
+      if (res.success) {
+        setMessages(messages.filter(m => m.id !== id));
+        toast({ title: 'Message removed' });
+      }
+    } catch (err) {
+      toast({ title: 'Error', description: 'Failed to delete message.', variant: 'destructive' });
     }
   };
 
@@ -129,24 +133,29 @@ export default function AdminDashboard() {
     e.preventDefault();
     setSubmitting(true);
     
-    const tagsArray = typeof projectForm.tags === 'string' 
-      ? projectForm.tags.split(',').map(t => t.trim()).filter(t => t !== '')
-      : projectForm.tags;
+    try {
+      const tagsArray = typeof projectForm.tags === 'string' 
+        ? projectForm.tags.split(',').map(t => t.trim()).filter(t => t !== '')
+        : projectForm.tags;
 
-    const projectData = { 
-      ...projectForm, 
-      tags: tagsArray,
-      id: editingProjectId || undefined 
-    };
+      const projectData = { 
+        ...projectForm, 
+        tags: tagsArray,
+        id: editingProjectId || undefined 
+      };
 
-    const res = await saveProject(projectData);
-    setSubmitting(false);
-    if (res.success) {
-      toast({ title: editingProjectId ? 'Project updated' : 'Project added' });
-      resetProjectForm();
-      fetchData();
-    } else {
-      toast({ title: 'Save failed', description: res.error, variant: 'destructive' });
+      const res = await saveProject(projectData);
+      if (res.success) {
+        toast({ title: editingProjectId ? 'Project updated' : 'Project added' });
+        resetProjectForm();
+        fetchData();
+      } else {
+        toast({ title: 'Save failed', description: res.error, variant: 'destructive' });
+      }
+    } catch (err) {
+      toast({ title: 'Error', description: 'An unexpected error occurred.', variant: 'destructive' });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -170,10 +179,14 @@ export default function AdminDashboard() {
 
   const handleDeleteProject = async (id: string) => {
     if (!confirm("Confirm project deletion?")) return;
-    const res = await deleteProject(id);
-    if (res.success) {
-      setProjects(projects.filter(p => p.id !== id));
-      toast({ title: 'Project deleted' });
+    try {
+      const res = await deleteProject(id);
+      if (res.success) {
+        setProjects(projects.filter(p => p.id !== id));
+        toast({ title: 'Project deleted' });
+      }
+    } catch (err) {
+      toast({ title: 'Error', description: 'Failed to delete project.', variant: 'destructive' });
     }
   };
 
@@ -181,28 +194,42 @@ export default function AdminDashboard() {
     e.preventDefault();
     if (!newSkill.name) return;
     setSubmitting(true);
-    const res = await addSkill(newSkill.category, newSkill.name);
-    setSubmitting(false);
-    if (res.success) {
-      toast({ title: 'Skill added' });
-      setNewSkill({ ...newSkill, name: '' });
-      fetchData();
+    try {
+      const res = await addSkill(newSkill.category, newSkill.name);
+      if (res.success) {
+        toast({ title: 'Skill added' });
+        setNewSkill({ ...newSkill, name: '' });
+        fetchData();
+      }
+    } catch (err) {
+      toast({ title: 'Error', description: 'Failed to add skill.', variant: 'destructive' });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleDeleteSkill = async (id: string) => {
-    const res = await deleteSkill(id);
-    if (res.success) {
-      setSkills(skills.filter(s => s.id !== id));
-      toast({ title: 'Skill removed' });
+    try {
+      const res = await deleteSkill(id);
+      if (res.success) {
+        setSkills(skills.filter(s => s.id !== id));
+        toast({ title: 'Skill removed' });
+      }
+    } catch (err) {
+      toast({ title: 'Error', description: 'Failed to delete skill.', variant: 'destructive' });
     }
   };
 
-  const formatDate = (dateStr: any) => {
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return 'Recently';
     try {
-      return new Date(dateStr).toLocaleString();
+      const date = new Date(dateStr);
+      return new Intl.DateTimeFormat('en-US', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      }).format(date);
     } catch (e) {
-      return 'Recent';
+      return 'Recently';
     }
   }
 
