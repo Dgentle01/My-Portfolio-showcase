@@ -71,22 +71,15 @@ export default function Home() {
     loadSkills();
   }, []);
 
-  const categories = [
-    'Frontend', 
-    'Backend', 
-    'Database', 
-    'Version Control', 
-    'Digital Marketing',
-    'AI & Automation',
-    'Mobile Development'
-  ];
-
   const getIconForSkill = (name: string) => {
     const Icon = skillIconMap[name] || skillIconMap[Object.keys(skillIconMap).find(key => name.includes(key)) || ''] || Icons.Default;
     return <Icon className="size-6 text-primary shrink-0" />;
   };
 
   const skillsToShow = dynamicSkills.length > 0 ? dynamicSkills : defaultSkills;
+  
+  // Derive categories dynamically from skills to ensure any new category shows up
+  const categories = Array.from(new Set(skillsToShow.map(s => s.category)));
 
   return (
     <div className="flex min-h-dvh flex-col text-foreground bg-[#0a0a0a]">

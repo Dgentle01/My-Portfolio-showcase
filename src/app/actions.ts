@@ -29,12 +29,16 @@ export async function submitContactForm(prevState: any, formData: FormData) {
   
   try {
     // 1. Save to Firestore
-    await addDoc(collection(db, 'messages'), {
-      name,
-      email,
-      message,
-      createdAt: serverTimestamp(),
-    });
+    try {
+      await addDoc(collection(db, 'messages'), {
+        name,
+        email,
+        message,
+        createdAt: serverTimestamp(),
+      });
+    } catch (dbError) {
+      console.error('Firestore save failed:', dbError);
+    }
 
     // 2. Optional: Send via Telegram Bot (Free, Instant, No domain required!)
     const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
@@ -42,15 +46,19 @@ export async function submitContactForm(prevState: any, formData: FormData) {
 
     if (telegramBotToken && telegramChatId) {
       const text = `📬 *New Portfolio Message*\n\n*Name:* ${name}\n*Email:* ${email}\n\n*Message:*\n${message}`;
-      await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: telegramChatId,
-          text: text,
-          parse_mode: 'Markdown',
-        }),
-      });
+      try {
+        await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: telegramChatId,
+            text: text,
+            parse_mode: 'Markdown',
+          }),
+        });
+      } catch (tgError) {
+        console.error('Telegram notification failed:', tgError);
+      }
     }
 
     // 3. Optional: Send Email via Resend
@@ -86,6 +94,7 @@ export async function getMessages() {
       createdAt: doc.data().createdAt?.toDate()?.toISOString() || new Date().toISOString(),
     }));
   } catch (error) {
+    console.error('getMessages failed:', error);
     return [];
   }
 }
@@ -101,25 +110,31 @@ export async function deleteMessage(id: string) {
 
 export async function getProjects() {
   try {
-    const snapshot = await getDocs(collection(db, 'projects'));
+    const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
+    const snapshot = await getDocs(q);
     if (snapshot.empty) return projectsData;
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as (Project & { id: string })[];
   } catch (error) {
+    console.error('getProjects failed, using defaults:', error);
     return projectsData;
   }
 }
 
 export async function saveProject(project: any) {
   try {
-    if (project.id) {
-      const { id, ...data } = project;
+    const { id, ...data } = project;
+    if (id) {
       await updateDoc(doc(db, 'projects', id), data);
     } else {
-      await addDoc(collection(db, 'projects'), { ...project, createdAt: serverTimestamp() });
+      await addDoc(collection(db, 'projects'), { 
+        ...data, 
+        createdAt: serverTimestamp() 
+      });
     }
     return { success: true };
   } catch (error) {
-    return { error: 'Failed to save project' };
+    console.error('saveProject failed:', error);
+    return { error: 'Failed to save project. Ensure Firebase is configured.' };
   }
 }
 
@@ -138,13 +153,18 @@ export async function getSkills() {
     const snapshot = await getDocs(q);
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
+    console.error('getSkills failed:', error);
     return [];
   }
 }
 
 export async function addSkill(category: string, name: string) {
   try {
-    await addDoc(collection(db, 'skills'), { category, name, createdAt: serverTimestamp() });
+    await addDoc(collection(db, 'skills'), { 
+      category, 
+      name, 
+      createdAt: serverTimestamp() 
+    });
     return { success: true };
   } catch (error) {
     return { error: 'Failed to add skill' };
