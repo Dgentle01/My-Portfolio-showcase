@@ -44,32 +44,13 @@ const skillIconMap: Record<string, any> = {
   'javascript': Icons.Code,
 };
 
-const defaultSkills = [
-  { id: 'd1', category: 'Frontend', name: 'React' },
-  { id: 'd2', category: 'Frontend', name: 'Next.js' },
-  { id: 'd3', category: 'Frontend', name: 'TypeScript' },
-  { id: 'd4', category: 'Frontend', name: 'Tailwind' },
-  { id: 'd5', category: 'Frontend', name: 'HTML/CSS' },
-  { id: 'd6', category: 'Backend', name: 'Node.js' },
-  { id: 'd7', category: 'Backend', name: 'Python' },
-  { id: 'd8', category: 'Database', name: 'SQL' },
-  { id: 'd9', category: 'Database', name: 'Supabase' },
-  { id: 'd10', category: 'Version Control', name: 'Git' },
-  { id: 'd11', category: 'Digital Marketing', name: 'SEO' },
-  { id: 'd12', category: 'Digital Marketing', name: 'Content Writing' },
-  { id: 'd13', category: 'AI & Automation', name: 'AI Automations' },
-  { id: 'd14', category: 'Mobile Development', name: 'Mobile App' },
-];
-
 export default function Home() {
-  const [dynamicSkills, setDynamicSkills] = useState<any[]>([]);
+  const [skills, setSkills] = useState<any[]>([]);
 
   useEffect(() => {
     async function loadSkills() {
-      const skills = await getSkills();
-      if (skills && skills.length > 0) {
-        setDynamicSkills(skills);
-      }
+      const data = await getSkills();
+      setSkills(data || []);
     }
     loadSkills();
   }, []);
@@ -81,8 +62,7 @@ export default function Home() {
     return <Icon className="size-6 text-primary shrink-0" />;
   };
 
-  const skillsToShow = dynamicSkills.length > 0 ? dynamicSkills : defaultSkills;
-  const categories = Array.from(new Set(skillsToShow.map(s => s.category)));
+  const categories = Array.from(new Set(skills.map(s => s.category)));
 
   return (
     <div className="flex min-h-dvh flex-col text-foreground bg-[#0a0a0a]">
@@ -142,7 +122,7 @@ export default function Home() {
             
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 justify-center">
               {categories.map((category) => {
-                const categorySkills = skillsToShow.filter(s => s.category === category);
+                const categorySkills = skills.filter(s => s.category === category);
                 if (categorySkills.length === 0) return null;
 
                 return (

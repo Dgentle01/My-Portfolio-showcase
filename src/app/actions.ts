@@ -1,11 +1,23 @@
-
 'use server';
 
 import { z } from 'zod';
 import { Resend } from 'resend';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, serverTimestamp, Timestamp } from 'firebase/firestore';
+import { 
+  collection, 
+  addDoc, 
+  getDocs, 
+  deleteDoc, 
+  doc, 
+  updateDoc, 
+  setDoc,
+  query, 
+  orderBy, 
+  serverTimestamp, 
+  Timestamp 
+} from 'firebase/firestore';
 import { projectsData, type Project } from '@/data/projects';
+import { defaultSkills } from '@/data/skills';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -128,20 +140,28 @@ export async function deleteMessage(id: string) {
 
 export async function getProjects() {
   try {
+    const hiddenSnapshot = await getDocs(collection(db, 'hidden_projects'));
+    const hiddenIds = new Set(hiddenSnapshot.docs.map(d => d.id));
+
+    const baseProjects = projectsData
+      .map((p, i) => ({ ...p, id: `default-${i}` }))
+      .filter(p => !hiddenIds.has(p.id));
+
     const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return projectsData;
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as (Project & { id: string })[];
+    const dbProjects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as (Project & { id: string })[];
+
+    return [...dbProjects, ...baseProjects];
   } catch (error) {
     console.error('getProjects failed, using defaults:', error);
-    return projectsData;
+    return projectsData.map((p, i) => ({ ...p, id: `default-${i}` }));
   }
 }
 
 export async function saveProject(project: any) {
   try {
     const { id, ...data } = project;
-    if (id) {
+    if (id && !id.startsWith('default-')) {
       await updateDoc(doc(db, 'projects', id), data);
     } else {
       await addDoc(collection(db, 'projects'), { 
@@ -158,6 +178,10 @@ export async function saveProject(project: any) {
 
 export async function deleteProject(id: string) {
   try {
+    if (id.startsWith('default-')) {
+      await setDoc(doc(db, 'hidden_projects', id), { hiddenAt: serverTimestamp() });
+      return { success: true };
+    }
     await deleteDoc(doc(db, 'projects', id));
     return { success: true };
   } catch (error) {
@@ -167,13 +191,19 @@ export async function deleteProject(id: string) {
 
 export async function getSkills() {
   try {
+    const hiddenSnapshot = await getDocs(collection(db, 'hidden_skills'));
+    const hiddenIds = new Set(hiddenSnapshot.docs.map(d => d.id));
+
+    const baseSkills = defaultSkills.filter(s => !hiddenIds.has(s.id));
+
     const q = query(collection(db, 'skills'), orderBy('createdAt', 'asc'));
     const snapshot = await getDocs(q);
-    if (snapshot.empty) return [];
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const dbSkills = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    return [...dbSkills, ...baseSkills];
   } catch (error) {
     console.error('getSkills failed:', error);
-    return [];
+    return defaultSkills;
   }
 }
 
@@ -192,6 +222,10 @@ export async function addSkill(category: string, name: string) {
 
 export async function deleteSkill(id: string) {
   try {
+    if (id.startsWith('default-')) {
+      await setDoc(doc(db, 'hidden_skills', id), { hiddenAt: serverTimestamp() });
+      return { success: true };
+    }
     await deleteDoc(doc(db, 'skills', id));
     return { success: true };
   } catch (error) {
