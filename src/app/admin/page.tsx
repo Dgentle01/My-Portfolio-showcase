@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -311,8 +310,8 @@ export default function AdminDashboard() {
               <Card className="bg-[#1a1a1a] border-white/5 border-dashed"><CardContent className="p-20 text-center text-muted-foreground">No inquiries yet. Incoming messages will appear here.</CardContent></Card>
             ) : (
               <div className="grid gap-4">
-                {messages.map((msg) => (
-                  <Card key={msg.id} className="bg-[#1a1a1a] border-white/5 hover:border-primary/40 transition-all group">
+                {messages.map((msg, idx) => (
+                  <Card key={msg.id || `msg-${idx}`} className="bg-[#1a1a1a] border-white/5 hover:border-primary/40 transition-all group">
                     <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                       <div className="space-y-1">
                         <CardTitle className="text-lg flex items-center gap-2 text-white">
@@ -388,8 +387,8 @@ export default function AdminDashboard() {
             </Card>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((proj) => (
-                <Card key={proj.id} className="bg-[#1a1a1a] border-white/5 overflow-hidden group hover:border-primary/30 transition-all">
+              {projects.map((proj, idx) => (
+                <Card key={proj.id || `proj-${idx}`} className="bg-[#1a1a1a] border-white/5 overflow-hidden group hover:border-primary/30 transition-all">
                   <div className="relative h-40 w-full bg-black/50">
                     {proj.image ? (
                       <img src={proj.image} alt={proj.name} className="object-cover w-full h-full opacity-60 group-hover:opacity-100 transition-opacity" />
@@ -461,8 +460,8 @@ export default function AdminDashboard() {
                     <CardTitle className="text-base font-headline uppercase tracking-widest text-primary border-b border-white/5 pb-2">{cat}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex flex-wrap gap-2">
-                    {skills.filter(s => s.category === cat).map(skill => (
-                      <Badge key={skill.id} variant="secondary" className="bg-black text-white border border-white/10 flex items-center gap-2 pr-1 py-1 group/badge hover:border-primary/50 transition-colors">
+                    {skills.filter(s => s.category === cat).map((skill, idx) => (
+                      <Badge key={skill.id || `skill-${idx}`} variant="secondary" className="bg-black text-white border border-white/10 flex items-center gap-2 pr-1 py-1 group/badge hover:border-primary/50 transition-colors">
                         {skill.name}
                         <button onClick={() => handleDeleteSkill(skill.id)} className="text-muted-foreground hover:text-destructive transition-colors">
                           <Trash2 className="size-3" />
