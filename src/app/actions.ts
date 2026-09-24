@@ -1,9 +1,10 @@
+
 'use server';
 
 import { z } from 'zod';
 import { Resend } from 'resend';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { projectsData, type Project } from '@/data/projects';
 
 const contactSchema = z.object({
@@ -90,11 +91,22 @@ export async function getMessages() {
   try {
     const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate()?.toISOString() || new Date().toISOString(),
-    }));
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      let createdAt = new Date().toISOString();
+      
+      if (data.createdAt instanceof Timestamp) {
+        createdAt = data.createdAt.toDate().toISOString();
+      } else if (data.createdAt) {
+        createdAt = new Date(data.createdAt).toISOString();
+      }
+
+      return {
+        id: doc.id,
+        ...data,
+        createdAt,
+      };
+    });
   } catch (error) {
     console.error('getMessages failed:', error);
     return [];
@@ -153,6 +165,7 @@ export async function getSkills() {
   try {
     const q = query(collection(db, 'skills'), orderBy('createdAt', 'asc'));
     const snapshot = await getDocs(q);
+    if (snapshot.empty) return [];
     return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   } catch (error) {
     console.error('getSkills failed:', error);

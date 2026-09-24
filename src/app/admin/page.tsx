@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -87,12 +88,12 @@ export default function AdminDashboard() {
         getProjects(),
         getSkills()
       ]);
-      setMessages(msgs);
-      setProjects(projs);
-      setSkills(skls);
+      setMessages(msgs || []);
+      setProjects(projs || []);
+      setSkills(skls || []);
     } catch (error) {
       console.error("Error fetching data:", error);
-      toast({ title: 'Error', description: 'Failed to connect to Firebase.', variant: 'destructive' });
+      toast({ title: 'Connection Error', description: 'Could not synchronize with Firebase.', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -102,12 +103,17 @@ export default function AdminDashboard() {
     e.preventDefault();
     setSubmitting(true);
     setAuthError('');
-    const isValid = await verifyAdminPassword(passwordInput);
-    setSubmitting(false);
-    if (isValid) {
-      setIsAuthenticated(true);
-    } else {
-      setAuthError('Incorrect management security credentials.');
+    try {
+      const isValid = await verifyAdminPassword(passwordInput);
+      if (isValid) {
+        setIsAuthenticated(true);
+      } else {
+        setAuthError('Access denied. Incorrect security key.');
+      }
+    } catch (err) {
+      setAuthError('Authentication server error.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -115,7 +121,7 @@ export default function AdminDashboard() {
     const res = await deleteMessage(id);
     if (res.success) {
       setMessages(messages.filter(m => m.id !== id));
-      toast({ title: 'Message deleted' });
+      toast({ title: 'Message removed' });
     }
   };
 
@@ -127,9 +133,8 @@ export default function AdminDashboard() {
       ? projectForm.tags.split(',').map(t => t.trim()).filter(t => t !== '')
       : projectForm.tags;
 
-    const { ...formData } = projectForm;
     const projectData = { 
-      ...formData, 
+      ...projectForm, 
       tags: tagsArray,
       id: editingProjectId || undefined 
     };
@@ -164,11 +169,11 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteProject = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this project?")) return;
+    if (!confirm("Confirm project deletion?")) return;
     const res = await deleteProject(id);
     if (res.success) {
       setProjects(projects.filter(p => p.id !== id));
-      toast({ title: 'Project removed' });
+      toast({ title: 'Project deleted' });
     }
   };
 
@@ -192,6 +197,14 @@ export default function AdminDashboard() {
       toast({ title: 'Skill removed' });
     }
   };
+
+  const formatDate = (dateStr: any) => {
+    try {
+      return new Date(dateStr).toLocaleString();
+    } catch (e) {
+      return 'Recent';
+    }
+  }
 
   if (!isAuthenticated) {
     return (
@@ -284,7 +297,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex items-center gap-4">
                         <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          <Clock className="size-3" /> {new Date(msg.createdAt).toLocaleString()}
+                          <Clock className="size-3" /> {formatDate(msg.createdAt)}
                         </span>
                         <Button variant="ghost" size="icon" onClick={() => handleDeleteMessage(msg.id)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10">
                           <Trash2 className="size-4" />

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -19,27 +20,28 @@ import { getSkills } from '@/app/actions';
 import { Icons } from '@/components/icons';
 
 const skillIconMap: Record<string, any> = {
-  'React': Icons.React,
-  'TypeScript': Icons.TypeScript,
-  'Tailwind': Icons.Tailwind,
-  'Bootstrap': Icons.Bootstrap,
-  'Node.js': Icons.NodeJs,
-  'Python': Icons.Python,
-  'SQL': Icons.Database,
-  'MySQL': Icons.Database,
-  'Supabase': Icons.Supabase,
-  'Git': Icons.Git,
-  'Content Writing': Icons.Writing,
-  'SEO': Icons.SEO,
-  'Google My Business': Icons.Store,
-  'Community Manager': Icons.Community,
-  'AI': Icons.AI,
-  'Automation': Icons.AI,
-  'Mobile App': Icons.Mobile,
-  'Next.js': Icons.React,
-  'HTML': Icons.Code,
-  'CSS': Icons.Layers,
-  'JavaScript': Icons.Code,
+  'react': Icons.React,
+  'typescript': Icons.TypeScript,
+  'tailwind': Icons.Tailwind,
+  'bootstrap': Icons.Bootstrap,
+  'node': Icons.NodeJs,
+  'python': Icons.Python,
+  'sql': Icons.Database,
+  'mysql': Icons.Database,
+  'supabase': Icons.Supabase,
+  'git': Icons.Git,
+  'writing': Icons.Writing,
+  'seo': Icons.SEO,
+  'google': Icons.Store,
+  'community': Icons.Community,
+  'ai': Icons.AI,
+  'automation': Icons.AI,
+  'mobile': Icons.Mobile,
+  'next': Icons.React,
+  'html': Icons.Code,
+  'css': Icons.Layers,
+  'js': Icons.Code,
+  'javascript': Icons.Code,
 };
 
 const defaultSkills = [
@@ -65,13 +67,17 @@ export default function Home() {
   useEffect(() => {
     async function loadSkills() {
       const skills = await getSkills();
-      setDynamicSkills(skills);
+      if (skills && skills.length > 0) {
+        setDynamicSkills(skills);
+      }
     }
     loadSkills();
   }, []);
 
   const getIconForSkill = (name: string) => {
-    const Icon = skillIconMap[name] || skillIconMap[Object.keys(skillIconMap).find(key => name.includes(key)) || ''] || Icons.Default;
+    const lowercaseName = name.toLowerCase();
+    const key = Object.keys(skillIconMap).find(k => lowercaseName.includes(k));
+    const Icon = key ? skillIconMap[key] : Icons.Default;
     return <Icon className="size-6 text-primary shrink-0" />;
   };
 
