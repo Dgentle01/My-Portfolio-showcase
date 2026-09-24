@@ -12,6 +12,11 @@ const contactSchema = z.object({
   message: z.string().min(10, { message: 'Message must be at least 10 characters.' }),
 });
 
+export async function verifyAdminPassword(password: string): Promise<boolean> {
+  const correctPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  return password === correctPassword;
+}
+
 export async function submitContactForm(prevState: any, formData: FormData) {
   const validatedFields = contactSchema.safeParse({
     name: formData.get('name'),
@@ -28,7 +33,6 @@ export async function submitContactForm(prevState: any, formData: FormData) {
   const { name, email, message } = validatedFields.data;
   
   try {
-    // 1. Save to Firestore
     try {
       await addDoc(collection(db, 'messages'), {
         name,
@@ -40,7 +44,6 @@ export async function submitContactForm(prevState: any, formData: FormData) {
       console.error('Firestore save failed:', dbError);
     }
 
-    // 2. Optional: Send via Telegram Bot (Free, Instant, No domain required!)
     const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN;
     const telegramChatId = process.env.TELEGRAM_CHAT_ID;
 
@@ -61,7 +64,6 @@ export async function submitContactForm(prevState: any, formData: FormData) {
       }
     }
 
-    // 3. Optional: Send Email via Resend
     const resendApiKey = process.env.RESEND_API_KEY;
     const sendToEmail = process.env.CONTACT_FORM_SEND_TO_EMAIL || 'oluseyisennuga015@gmail.com';
     const sendFromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';

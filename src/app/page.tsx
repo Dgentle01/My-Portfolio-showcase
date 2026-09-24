@@ -6,7 +6,6 @@ import {
   ArrowRight, 
   Mail, 
   Sparkles, 
-  LayoutDashboard,
   Github,
   Send,
   Linkedin
@@ -77,8 +76,6 @@ export default function Home() {
   };
 
   const skillsToShow = dynamicSkills.length > 0 ? dynamicSkills : defaultSkills;
-  
-  // Derive categories dynamically from skills to ensure any new category shows up
   const categories = Array.from(new Set(skillsToShow.map(s => s.category)));
 
   return (
@@ -89,13 +86,10 @@ export default function Home() {
             <Sparkles className="size-6 text-primary" />
             <span className="font-bold font-headline text-2xl text-primary uppercase tracking-wider">Seyi's Showcase</span>
           </Link>
-          <nav className="hidden items-center space-x-8 text-sm font-medium uppercase tracking-widest md:flex">
+          <nav className="flex items-center space-x-8 text-sm font-medium uppercase tracking-widest">
             <Link href="#skills" className="hover:text-primary transition-colors">Skills</Link>
             <Link href="#portfolio" className="hover:text-primary transition-colors">Portfolio</Link>
             <Link href="#contact" className="hover:text-primary transition-colors">Contact</Link>
-            <Button variant="outline" size="sm" asChild className="hidden border-primary/50 text-primary hover:bg-primary hover:text-white lg:flex">
-              <Link href="/admin"><LayoutDashboard className="mr-2 size-4" /> Admin</Link>
-            </Button>
           </nav>
         </div>
       </header>

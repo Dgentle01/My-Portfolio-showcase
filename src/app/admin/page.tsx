@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  LayoutDashboard, 
   Briefcase, 
   Wrench, 
   MessageSquare, 
@@ -16,7 +15,8 @@ import {
   Loader2,
   Edit2,
   X,
-  Sparkles
+  Sparkles,
+  Lock
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -33,17 +33,21 @@ import {
   deleteProject,
   getSkills,
   addSkill,
-  deleteSkill
+  deleteSkill,
+  verifyAdminPassword
 } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function AdminDashboard() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authError, setAuthError] = useState('');
   const [messages, setMessages] = useState<any[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [skills, setSkills] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -70,8 +74,10 @@ export default function AdminDashboard() {
   ];
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [isAuthenticated]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -86,9 +92,22 @@ export default function AdminDashboard() {
       setSkills(skls);
     } catch (error) {
       console.error("Error fetching data:", error);
-      toast({ title: 'Error', description: 'Failed to connect to Firebase. Check your keys.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Failed to connect to Firebase.', variant: 'destructive' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setAuthError('');
+    const isValid = await verifyAdminPassword(passwordInput);
+    setSubmitting(false);
+    if (isValid) {
+      setIsAuthenticated(true);
+    } else {
+      setAuthError('Incorrect management security credentials.');
     }
   };
 
@@ -104,7 +123,6 @@ export default function AdminDashboard() {
     e.preventDefault();
     setSubmitting(true);
     
-    // Ensure tags are an array
     const tagsArray = typeof projectForm.tags === 'string' 
       ? projectForm.tags.split(',').map(t => t.trim()).filter(t => t !== '')
       : projectForm.tags;
@@ -175,9 +193,44 @@ export default function AdminDashboard() {
     }
   };
 
+  if (!isAuthenticated) {
+    return (
+      <div className="flex min-h-dvh flex-col items-center justify-center bg-[#0a0a0a] px-4">
+        <Card className="w-full max-w-md bg-[#1a1a1a] border-white/5 rounded-none shadow-2xl p-4">
+          <CardHeader className="text-center space-y-2">
+            <div className="mx-auto size-12 bg-primary/10 flex items-center justify-center mb-2">
+              <Lock className="size-6 text-primary" />
+            </div>
+            <CardTitle className="text-2xl font-headline uppercase tracking-wider text-white">System Gateway</CardTitle>
+            <CardDescription>Provide access key to enter administrative parameters.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-white font-bold uppercase tracking-wider text-xs">Security Key</Label>
+                <Input 
+                  type="password" 
+                  className="bg-black border-white/10 text-white rounded-none h-12 tracking-widest text-center"
+                  placeholder="••••••••"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  required 
+                />
+              </div>
+              {authError && <p className="text-destructive text-xs font-bold text-center mt-1">{authError}</p>}
+              <Button type="submit" disabled={submitting} className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-widest rounded-none">
+                {submitting ? <Loader2 className="size-5 animate-spin mx-auto" /> : 'Authorize Entrance'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
-      <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-background">
+      <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-[#0a0a0a]">
         <Loader2 className="size-8 animate-spin text-primary" />
         <p className="text-muted-foreground animate-pulse">Synchronizing with Firebase...</p>
       </div>
